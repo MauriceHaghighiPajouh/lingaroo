@@ -1,24 +1,32 @@
-const CSV_URL = "https://rapid-union-d544.mauricehaghighi.workers.dev/";
-
+const CSV_URL = "https://rapid-union-d544.mauricehaghighi.workers.dev/"; 
+const EXTRA_CSV_URL = "https://divine-dew-07d6.mauricehaghighi.workers.dev/"; 
 let acronyms = [];
-
-Papa.parse(CSV_URL, {
-    download: true,
-    header: true,
-    delimiter: ";",
-    complete: function(results) {
-        acronyms = results.data.filter(a => a.acronym);
-        console.log("CSV geladen:", acronyms);
-    },
-    error: function(err) {
-        console.error("Fehler beim Laden der CSV:", err);
-    }
-});
+let originalData = []; 
 
 const input = document.getElementById("searchInput");
 const suggestions = document.getElementById("suggestions");
 const searchBtn = document.getElementById("searchBtn");
 const resultDiv = document.getElementById("result");
+const llmCheckbox = document.getElementById("llmCheckbox");
+const extraDataCheckbox = document.getElementById("extraDataCheckbox");
+
+async function loadCSV(url = CSV_URL, saveOriginal = true) {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Fehler beim Laden der CSV: ${res.status}`);
+        const csvText = await res.text();
+
+        const parsed = Papa.parse(csvText, { header: true, delimiter: ";" }).data.filter(a => a.acronym);
+        acronyms = parsed;
+        if (saveOriginal) originalData = parsed.slice(); 
+        console.log(`CSV geladen: ${parsed.length} Einträge`);
+    } catch (err) {
+        console.error("CSV Ladefehler:", err);
+        resultDiv.innerText = "Fehler beim Laden der CSV.";
+    }
+}
+
+loadCSV();
 
 input.addEventListener("input", () => {
     const query = input.value.trim().toLowerCase();
@@ -44,8 +52,9 @@ input.addEventListener("input", () => {
 
 searchBtn.addEventListener("click", () => {
     const query = input.value.trim().toLowerCase();
-    const match = acronyms.find(a => a.acronym.toLowerCase() === query);
     suggestions.innerHTML = "";
+    const match = acronyms.find(a => a.acronym.toLowerCase() === query);
+
     if (match) {
         showResult(match);
     } else {
@@ -54,9 +63,7 @@ searchBtn.addEventListener("click", () => {
 });
 
 input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        searchBtn.click();
-    }
+    if (e.key === "Enter") searchBtn.click();
 });
 
 function showResult(match) {
@@ -75,9 +82,3 @@ function showResult(match) {
     });
 }
 
-const llmCheckbox = document.getElementById("llmCheckbox");
-const extraDataCheckbox = document.getElementById("extraDataCheckbox");
-
-extraDataCheckbox.addEventListener("change", () => {
-    console.log("Zusätzliche Daten aktiviert:", extraDataCheckbox.checked);
-});

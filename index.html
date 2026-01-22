@@ -7,15 +7,27 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Hauptcontainer -->
   <div class="container">
     <h1>Acronym Lookup</h1>
 
+    <!-- Suchbox mit Autocomplete -->
     <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Gib ein Acronym ein...">
+      <input type="text" id="searchInput" placeholder="Gib ein Acronym ein..." autocomplete="off">
       <button id="searchBtn">Suchen</button>
+      <ul id="suggestions" class="suggestions"></ul>
     </div>
 
+    <!-- Ergebnisanzeige -->
     <div id="result" class="result"></div>
+  </div>
+
+  <!-- Optionen unten rechts -->
+  <div class="options-box">
+    <label>
+      <input type="checkbox" id="extraDataCheckbox">
+      Aktiviere zusätzliche Daten
+    </label>
   </div>
 
   <!-- Papaparse für CSV Parsing -->

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acronym Lookup</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Acronym Lookup</h1>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Gib ein Acronym ein...">
+      <button id="searchBtn">Suchen</button>
+    </div>
+
+    <div id="result" class="result"></div>
+  </div>
+
+  <!-- Papaparse für CSV Parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
